@@ -264,7 +264,12 @@ public class BlagueProvider implements BlagueProviderPairAPair {
 
     @Override
     public void notify(BlagueProviderPairAPair ref) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            // Ajout à la liste
+            listeRef.put(ref.getNom(), ref);
+        } catch (RemoteException ex) {
+            Logger.getLogger(BlagueProvider.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

@@ -8,7 +8,10 @@ package annuaire;
 
 import codebase.AnnuaireInterface;
 import codebase.BlagueProviderPairAPair;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -42,6 +45,14 @@ public class Annuaire implements AnnuaireInterface {
         // Conversion
         BlagueProviderPairAPair[] res = (BlagueProviderPairAPair[]) bplist.toArray();
         
+        // Notify
+        for(BlagueProviderPairAPair bppp : res) {
+            try {
+                bppp.notify(ref);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Annuaire.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         return res;
     }
 
