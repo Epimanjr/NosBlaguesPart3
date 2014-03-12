@@ -33,7 +33,8 @@ public class BlagueProvider implements BlagueProviderPairAPair {
     private HashMap<String, Blague> listeBlagues;
 
     /**
-     * le nom des autres BlagueProvider connus à leurs références distantes (ces références sont à récupérer au lancement de l’application)
+     * le nom des autres BlagueProvider connus à leurs références distantes (ces
+     * références sont à récupérer au lancement de l’application)
      */
     private HashMap<String, BlagueProviderPairAPair> listeRef;
 
@@ -266,7 +267,10 @@ public class BlagueProvider implements BlagueProviderPairAPair {
     public void notify(BlagueProviderPairAPair ref) {
         try {
             // Ajout à la liste
-            listeRef.put(ref.getNom(), ref);
+
+            if (!ref.getNom().equals(this.getNom())) {
+                listeRef.put(ref.getNom(), ref);
+            }
         } catch (RemoteException ex) {
             Logger.getLogger(BlagueProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -274,7 +278,15 @@ public class BlagueProvider implements BlagueProviderPairAPair {
 
     @Override
     public void notifyDeconnect(BlagueProviderPairAPair ref) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         try {
+            // Ajout à la liste
+
+            if (!ref.getNom().equals(this.getNom())) {
+                listeRef.remove(ref.getNom());
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(BlagueProvider.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

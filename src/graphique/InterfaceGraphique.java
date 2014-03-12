@@ -31,6 +31,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class InterfaceGraphique extends JFrame {
+    
+    public static AnnuaireInterface ai;
 
     /**
      * blague provider observ�
@@ -61,7 +63,6 @@ public class InterfaceGraphique extends JFrame {
      * @return
      */
     public JPanel ongletDistant() {
-
         JPanel pdistant = new JPanel();
 
         //la boite contenant tout
@@ -92,7 +93,7 @@ public class InterfaceGraphique extends JFrame {
 
         // bouton de sauvegarde
         JButton bouton = new JButton("telecharge");
-        
+
         // Ajout du listener sur telecharge
         bouton.addActionListener(new ActionListener() {
 
@@ -100,19 +101,38 @@ public class InterfaceGraphique extends JFrame {
             public void actionPerformed(ActionEvent ae) {
                 // On récupère le nom de la blague
                 String nomblague = (String) blaguesDistantes.getSelectedValue();
-                
+
                 // On récupère la ref
                 String nomref = (String) serveurs.getSelectedValue();
                 BlagueProviderPairAPair ref = bp.getListeRef().get(nomref);
-                
+
                 bp.telechargeBlague(ref, nomblague);
-                
+
                 // Mise à jour des blagues locales
                 MaJBlagues();
-                
+
             }
         });
+
+        //Button disconnect
+        JButton exit = new JButton("Disconnect");
+
+        //Add Listener
+        exit.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    ai.disconnect(bp);
+                    System.exit(2);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(InterfaceGraphique.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
         distant.add(bouton);
+        distant.add(exit);
 
         //encapsuler dans un jpanel
         pdistant.add(distant);
@@ -188,7 +208,7 @@ public class InterfaceGraphique extends JFrame {
 
         //bouton de sauvegarde
         JButton bouton = new JButton("sauve");
-        
+
         // Ajout Listener sur sauve
         bouton.addActionListener(new ActionListener() {
 
@@ -196,17 +216,17 @@ public class InterfaceGraphique extends JFrame {
             public void actionPerformed(ActionEvent ae) {
                 // Création de la blague
                 Blague b = new Blague(nom.getText(), question.getText(), reponse.getText());
-                
+
                 // Ajout à bp
                 bp.ajoutBlague(b);
-                
+
                 // Mise à jour des blagues
                 MaJBlagues();
-                
+
                 local.repaint();
             }
         });
-        
+
         blocal.add(bouton);
 
         local.add(blocal);
@@ -265,6 +285,30 @@ public class InterfaceGraphique extends JFrame {
         JTabbedPane onglets = new JTabbedPane();
         onglets.addTab("local", ongletLocal());
         onglets.addTab("distant", ongletDistant());
+
+        onglets.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent me) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent me) {
+                MaJServeurs();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent me) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent me) {
+            }
+        });
 
         //affichage du JFRAME
         setContentPane(onglets);
@@ -335,18 +379,21 @@ public class InterfaceGraphique extends JFrame {
             Registry registry;
             try {
                 registry = LocateRegistry.getRegistry();
-                
+
                 //Récupération de l'annuaire
-                AnnuaireInterface ai = (AnnuaireInterface) registry.lookup("Annuaire");
+                ai = (AnnuaireInterface) registry.lookup("Annuaire");
 
                 //Export
                 BlagueProviderPairAPair ri = (BlagueProviderPairAPair) UnicastRemoteObject.exportObject(bp, 0);
-                
+
                 //Enregitrement
-                ai.register(ri);
-                
+                for (BlagueProviderPairAPair bpp : ai.register(ri)) {
+                    if (!bp.getNom().equals(bpp.getNom())) {
+                        bp.getListeRef().put(bpp.getNom(), bpp);
+                    }
+                }
+
                 //testUnitaire(args[0], bp);
-                
                 System.out.println("Client lancé !");
 
                 bp.ajoutBlague(new Blague("nom1", "question1", "reponse1"));

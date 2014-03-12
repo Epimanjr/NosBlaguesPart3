@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package annuaire;
 
 import codebase.AnnuaireInterface;
@@ -19,10 +18,10 @@ import java.util.logging.Logger;
  * @author Antoine Nosal
  */
 public class Annuaire implements AnnuaireInterface {
-    
+
     //Liste contenant tous les BlagueProviderPairAPair connecté
     private final ArrayList<BlagueProviderPairAPair> bplist;
-    
+
     /**
      * Construit un annuaire vide
      */
@@ -41,17 +40,17 @@ public class Annuaire implements AnnuaireInterface {
     public BlagueProviderPairAPair[] register(BlagueProviderPairAPair ref) {
         // Ajout à la liste
         bplist.add(ref);
-        
+
         // Conversion
-        BlagueProviderPairAPair[] res = new  BlagueProviderPairAPair[bplist.size()];
+        BlagueProviderPairAPair[] res = new BlagueProviderPairAPair[bplist.size()];
         int iterateur = 0;
-        for(BlagueProviderPairAPair bpp : bplist) {
+        for (BlagueProviderPairAPair bpp : bplist) {
             res[iterateur] = bpp;
             iterateur++;
         }
-        
+
         // Notify
-        for(BlagueProviderPairAPair bppp : res) {
+        for (BlagueProviderPairAPair bppp : res) {
             try {
                 bppp.notify(ref);
             } catch (RemoteException ex) {
@@ -62,20 +61,24 @@ public class Annuaire implements AnnuaireInterface {
     }
 
     /**
-     * 
-     * @param ref 
+     *
+     * @param ref
      */
     @Override
     public void disconnect(BlagueProviderPairAPair ref) {
         bplist.remove(ref);
         // Notify
-        for(BlagueProviderPairAPair bppp : bplist) {
-            try {
+        try {
+            for (BlagueProviderPairAPair bppp : bplist) {
+
                 bppp.notifyDeconnect(ref);
-            } catch (RemoteException ex) {
-                Logger.getLogger(Annuaire.class.getName()).log(Level.SEVERE, null, ex);
+
             }
+        } catch (RemoteException ex) {
+            Logger.getLogger(Annuaire.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        System.out.println("Disconnect");
     }
-    
+
 }
