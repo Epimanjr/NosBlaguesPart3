@@ -2,6 +2,7 @@ package graphique;
 
 import blague.Blague;
 import blagueprovider.BlagueProvider;
+import codebase.AnnuaireInterface;
 import codebase.BlagueProviderPairAPair;
 import exception.BlagueAbsenteException;
 import java.rmi.RemoteException;
@@ -334,23 +335,18 @@ public class InterfaceGraphique extends JFrame {
             Registry registry;
             try {
                 registry = LocateRegistry.getRegistry();
-
-                for (int i = 1; i < args.length; i++) {
-                    // affichage
-                    System.out.println("Récupération de " + args[i] + " ...");
-
-                    // Récuperation de la reference distante
-                    BlagueProviderPairAPair proxy = (BlagueProviderPairAPair) registry.lookup(args[i]);
-
-                    // Ajout de la référence
-                    bp.ajoutReference(args[i], proxy);
-                }
+                
+                //Récupération de l'annuaire
+                AnnuaireInterface ai = (AnnuaireInterface) registry.lookup("Annuaire");
 
                 //Export
                 BlagueProviderPairAPair ri = (BlagueProviderPairAPair) UnicastRemoteObject.exportObject(bp, 0);
-                registry.rebind(args[0], ri);
-
+                
+                //Enregitrement
+                ai.register(ri);
+                
                 //testUnitaire(args[0], bp);
+                
                 System.out.println("Client lancé !");
 
                 bp.ajoutBlague(new Blague("nom1", "question1", "reponse1"));

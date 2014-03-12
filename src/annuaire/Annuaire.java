@@ -36,7 +36,13 @@ public class Annuaire implements AnnuaireInterface {
      */
     @Override
     public BlagueProviderPairAPair[] register(BlagueProviderPairAPair ref) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // Ajout à la liste
+        bplist.add(ref);
+        
+        // Conversion
+        BlagueProviderPairAPair[] res = (BlagueProviderPairAPair[]) bplist.toArray();
+        
+        return res;
     }
 
     /**
