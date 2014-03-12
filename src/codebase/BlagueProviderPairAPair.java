@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
  * @author Maxime Blaise
  * @author Antoine Nosal
  */
-public interface BlagueProviderPairApair extends Remote {
+public interface BlagueProviderPairAPair extends Remote {
 
     /**
      * récupère le nom du blagueprovider
@@ -38,4 +38,20 @@ public interface BlagueProviderPairApair extends Remote {
      * @throws java.rmi.RemoteException
      */
     public Blague getBlague(String nom) throws BlagueAbsenteException, RemoteException;
+
+    /**
+     * Méthode appelé par Annuaire sur les serveurs distants qu'il référence
+     * lorsqu'un nouveau BlagueProvider s'enregistre
+     *
+     * @param ref
+     */
+    void notify(BlagueProviderPairAPair ref);
+
+    /**
+     * Méthode appelée par Annuaire lorqu'un BlagueProvider se déconnecte
+     *
+     * @param ref
+     */
+    void notifyDeconnect(BlagueProviderPairAPair ref);
+
 }
