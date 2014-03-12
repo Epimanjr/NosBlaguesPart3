@@ -44,14 +44,16 @@ public interface BlagueProviderPairAPair extends Remote {
      * lorsqu'un nouveau BlagueProvider s'enregistre
      *
      * @param ref
+     * @throws java.rmi.RemoteException
      */
-    void notify(BlagueProviderPairAPair ref);
+    void notify(BlagueProviderPairAPair ref) throws RemoteException;
 
     /**
      * Méthode appelée par Annuaire lorqu'un BlagueProvider se déconnecte
      *
      * @param ref
+     * @throws java.rmi.RemoteException
      */
-    void notifyDeconnect(BlagueProviderPairAPair ref);
+    void notifyDeconnect(BlagueProviderPairAPair ref) throws RemoteException;
 
 }

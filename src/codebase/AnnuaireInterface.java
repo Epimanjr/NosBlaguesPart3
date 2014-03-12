@@ -5,12 +5,15 @@
  */
 package codebase;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Maxime Blaise
  * @author Antoine Nosal
  */
-public interface AnnuaireInterface {
+public interface AnnuaireInterface extends Remote {
 
     /**
      * Méthode qui prend en paramètre la référence distante du BlagueProvider à
@@ -18,12 +21,14 @@ public interface AnnuaireInterface {
      *
      * @param ref
      * @return
+     * @throws java.rmi.RemoteException
      */
-    public BlagueProviderPairAPair[] register(BlagueProviderPairAPair ref);
+    public BlagueProviderPairAPair[] register(BlagueProviderPairAPair ref) throws RemoteException;
 
     /**
      *
      * @param ref
+     * @throws java.rmi.RemoteException
      */
-    public void disconnect(BlagueProviderPairAPair ref);
+    public void disconnect(BlagueProviderPairAPair ref) throws RemoteException;
 }

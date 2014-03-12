@@ -2,7 +2,7 @@ package graphique;
 
 import blague.Blague;
 import blagueprovider.BlagueProvider;
-import codebase.BlagueProviderPairApair;
+import codebase.BlagueProviderPairAPair;
 import exception.BlagueAbsenteException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -102,7 +102,7 @@ public class InterfaceGraphique extends JFrame {
                 
                 // On récupère la ref
                 String nomref = (String) serveurs.getSelectedValue();
-                BlagueProviderPairApair ref = bp.getListeRef().get(nomref);
+                BlagueProviderPairAPair ref = bp.getListeRef().get(nomref);
                 
                 bp.telechargeBlague(ref, nomblague);
                 
@@ -308,9 +308,8 @@ public class InterfaceGraphique extends JFrame {
         //Récupération du nom du serveur actuellement sélectionné
         String nomserveur = (String) serveurs.getSelectedValue();
         //Récupération du serveur à partir du nom
-        BlagueProviderPairApair serveur = bp.getListeRef().get(nomserveur);
+        BlagueProviderPairAPair serveur = bp.getListeRef().get(nomserveur);
         try {
-            //Remplissage de l'attribut blaguesDistantes avec le nom des blagues
             blaguesDistantes.setListData(serveur.getAllNames());
         } catch (RemoteException ex) {
             Logger.getLogger(InterfaceGraphique.class.getName()).log(Level.SEVERE, null, ex);
@@ -341,14 +340,14 @@ public class InterfaceGraphique extends JFrame {
                     System.out.println("Récupération de " + args[i] + " ...");
 
                     // Récuperation de la reference distante
-                    BlagueProviderPairApair proxy = (BlagueProviderPairApair) registry.lookup(args[i]);
+                    BlagueProviderPairAPair proxy = (BlagueProviderPairAPair) registry.lookup(args[i]);
 
                     // Ajout de la référence
                     bp.ajoutReference(args[i], proxy);
                 }
 
                 //Export
-                BlagueProviderPairApair ri = (BlagueProviderPairApair) UnicastRemoteObject.exportObject(bp, 0);
+                BlagueProviderPairAPair ri = (BlagueProviderPairAPair) UnicastRemoteObject.exportObject(bp, 0);
                 registry.rebind(args[0], ri);
 
                 //testUnitaire(args[0], bp);
