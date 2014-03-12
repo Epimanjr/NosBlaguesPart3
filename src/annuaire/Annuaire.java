@@ -67,7 +67,15 @@ public class Annuaire implements AnnuaireInterface {
      */
     @Override
     public void disconnect(BlagueProviderPairAPair ref) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        bplist.remove(ref);
+        // Notify
+        for(BlagueProviderPairAPair bppp : bplist) {
+            try {
+                bppp.notifyDeconnect(ref);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Annuaire.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
 }
