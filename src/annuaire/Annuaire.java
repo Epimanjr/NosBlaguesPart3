@@ -43,7 +43,12 @@ public class Annuaire implements AnnuaireInterface {
         bplist.add(ref);
         
         // Conversion
-        BlagueProviderPairAPair[] res = (BlagueProviderPairAPair[]) bplist.toArray();
+        BlagueProviderPairAPair[] res = new  BlagueProviderPairAPair[bplist.size()];
+        int iterateur = 0;
+        for(BlagueProviderPairAPair bpp : bplist) {
+            res[iterateur] = bpp;
+            iterateur++;
+        }
         
         // Notify
         for(BlagueProviderPairAPair bppp : res) {
